@@ -4,18 +4,20 @@ import { Copy, Link as LinkIcon, CheckCircle2 } from 'lucide-react';
 export default function AdminPage() {
   const [prefix, setPrefix] = useState('');
   const [guestName, setGuestName] = useState('');
+  const [table, setTable] = useState('');
   
   const [generated, setGenerated] = useState<{url: string, message: string} | null>(null);
   const [copiedType, setCopiedType] = useState<'link' | 'message' | null>(null);
 
-  const generateMessage = (pfx: string, name: string, url: string) => {
-    return `Dear ${pfx} ${name} ❤️\n\nWith joyful hearts, we warmly invite you to celebrate one of the most special days of our lives as we begin our journey together.\n\nPlease view our wedding invitation and all the event details through the link below 🌐:\n\n${url}\n\nYour presence would truly mean the world to us, and we would be honored to celebrate this beautiful moment together.\n\nWith love,\n❤️ Shakila & Madawa`;
+  const generateMessage = (pfx: string, name: string, tbl: string, url: string) => {
+    const tableText = tbl ? `\n\nYour reserved table number is ${tbl}.` : '';
+    return `Dear ${pfx} ${name} ❤️\n\nWith joyful hearts, we warmly invite you to celebrate one of the most special days of our lives as we begin our journey together.\n\nPlease view our wedding invitation and all the event details through the link below 🌐:\n\n${url}${tableText}\n\nYour presence would truly mean the world to us, and we would be honored to celebrate this beautiful moment together.\n\nWith love,\n❤️ Shaneka & Ranuka`;
   };
 
   const handleGenerate = () => {
     if (!guestName.trim()) return;
-    const url = `${window.location.origin}/?prefix=${encodeURIComponent(prefix)}&guest=${encodeURIComponent(guestName.trim())}`;
-    const message = generateMessage(prefix, guestName.trim(), url);
+    const url = `${window.location.origin}/?prefix=${encodeURIComponent(prefix)}&guest=${encodeURIComponent(guestName.trim())}${table.trim() ? `&table=${encodeURIComponent(table.trim())}` : ''}`;
+    const message = generateMessage(prefix, guestName.trim(), table.trim(), url);
     setGenerated({ url, message });
   };
 
@@ -60,6 +62,17 @@ export default function AdminPage() {
               placeholder="e.g. Sanjaya" 
               value={guestName}
               onChange={(e) => setGuestName(e.target.value)}
+              className="w-full p-4 border border-zinc-200 rounded-xl bg-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#C8B29E] font-serif text-[#3D2B1F] text-xl"
+            />
+          </div>
+
+          <div>
+            <label className="block text-[12px] uppercase tracking-[0.2em] font-bold text-[#8B7355] mb-2">Table Number (Optional)</label>
+            <input 
+              type="text" 
+              placeholder="e.g. 5" 
+              value={table}
+              onChange={(e) => setTable(e.target.value)}
               className="w-full p-4 border border-zinc-200 rounded-xl bg-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#C8B29E] font-serif text-[#3D2B1F] text-xl"
             />
           </div>

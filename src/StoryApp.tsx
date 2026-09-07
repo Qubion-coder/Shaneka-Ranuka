@@ -20,6 +20,7 @@ function SectionBackground() {
 export default function StoryApp() {
   const [invitationOpened, setInvitationOpened] = useState(false);
   const [introPlayed, setIntroPlayed] = useState(false);
+  const [transitionPlayed, setTransitionPlayed] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -31,7 +32,7 @@ export default function StoryApp() {
   });
 
   useEffect(() => {
-    const weddingDate = new Date('2026-09-24T08:30:00').getTime();
+    const weddingDate = new Date('2026-10-17T17:00:00').getTime();
 
     const interval = setInterval(() => {
       const now = new Date().getTime();
@@ -59,6 +60,15 @@ export default function StoryApp() {
     }
   }, [invitationOpened]);
 
+  useEffect(() => {
+    if (introPlayed && !transitionPlayed) {
+      const timer = setTimeout(() => {
+        setTransitionPlayed(true);
+      }, 4000); // show transition screen for 4 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [introPlayed, transitionPlayed]);
+
 
 
   const togglePlay = () => {
@@ -74,8 +84,9 @@ export default function StoryApp() {
 
   // Read personalized guest link params
   const urlParams = new URLSearchParams(window.location.search);
-  const guestPrefix = urlParams.get('prefix') || 'Mr. & Mrs./ Mr./Ms.';
-  const guestName = urlParams.get('guest') || 'Kawabe Masaki and Family';
+  const guestPrefix = urlParams.get('prefix') || '';
+  const guestName = urlParams.get('guest') || '';
+  const tableNumber = urlParams.get('table') || '';
 
   return (
     <>
@@ -104,7 +115,7 @@ export default function StoryApp() {
               className="z-10 flex flex-col items-center gap-8"
             >
               <h1 className="script text-6xl sm:text-7xl text-[#2C2C2C] drop-shadow-sm font-normal text-center px-4">
-                Shakila <span className="text-[#8B7355] text-5xl">&amp;</span> Madawa
+                Shaneka <span className="text-[#8B7355] text-5xl">&amp;</span> Ranuka
               </h1>
               <p className="text-sm uppercase tracking-[0.3em] text-[#2C2C2C] font-medium text-center">
                 Wedding Invitation
@@ -150,6 +161,47 @@ export default function StoryApp() {
         )}
       </AnimatePresence>
 
+      <AnimatePresence>
+        {introPlayed && !transitionPlayed && (
+          <motion.div
+            key="transition-screen"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 1.5 } }}
+            className="fixed inset-0 z-[50] bg-black flex flex-col items-center justify-center overflow-hidden"
+          >
+            <div className="absolute inset-0 z-0">
+              <img
+                src="/PRE/A7208860.jpg.jpeg"
+                alt="Couple"
+                className="w-full h-full object-cover opacity-80"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 1.5 }}
+              className="z-10 flex flex-col items-center gap-8 mt-auto mb-32"
+            >
+              <h2 className="script text-5xl md:text-6xl text-white drop-shadow-md text-center px-6">
+                You are cordially invited
+              </h2>
+              
+              <div className="flex items-center gap-3 text-[#EAE1D3] uppercase tracking-[0.4em] text-[11px] font-bold">
+                <span className="ml-2">Loading</span>
+                <div className="flex gap-1.5">
+                  <div className="w-1 h-1 bg-[#EAE1D3] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <div className="w-1 h-1 bg-[#EAE1D3] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <div className="w-1 h-1 bg-[#EAE1D3] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="snap-container no-scrollbar bg-paper relative text-[#3D2B1F] font-sans">
 
 
@@ -167,70 +219,46 @@ export default function StoryApp() {
               >
 
 
-                {guestName ? (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.8, duration: 1 }}
-                    className="mb-6 flex flex-col items-center"
-                  >
-                    <p className="text-[12px] sm:text-sm uppercase tracking-[0.2em] font-bold text-[#8B7355] mb-4">
-                      WE CORDIALLY INVITE
-                    </p>
-                    <p className="script text-4xl sm:text-5xl text-[#3D2B1F] drop-shadow-sm mb-4 text-center px-4">
-                      {guestPrefix} {guestName}
-                    </p>
-                    <div className="h-px w-16 bg-[#3D2B1F]/50 mb-6"></div>
-                    <p className="text-[12px] sm:text-sm uppercase tracking-[0.2em] font-medium text-[#2C2C2C] mb-2 sm:mb-4">
-                      TO CELEBRATE OUR
-                    </p>
-                  </motion.div>
-                ) : (
-                  <>
-                    <p className="text-[12px] sm:text-sm uppercase tracking-[0.2em] font-medium text-[#2C2C2C] mb-1">
-                      INVITE YOU TO CELEBRATE
-                    </p>
-                    <p className="text-[12px] sm:text-sm uppercase tracking-[0.2em] font-medium text-[#2C2C2C] mb-2 sm:mb-4">
-                      OUR
-                    </p>
-                  </>
-                )}
 
-                <h1 className="script text-7xl sm:text-[5.5rem] text-[#2C2C2C] mb-8 sm:mb-12 drop-shadow-sm font-normal">
-                  Wedding
+                <div className="mb-4 flex flex-col items-center w-full">
+                  <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.1em] font-bold text-[#8B7355] mb-4 text-center px-2 leading-relaxed">
+                    WHAT GOD HAS JOINED TOGETHER LET NO MAN SEPARATE
+                  </p>
+                  
+                  <p className="text-[11px] sm:text-[12px] uppercase tracking-[0.15em] font-medium text-[#2C2C2C] mb-2">
+                    MR. & MRS. TRAVIN LODEWYKE
+                  </p>
+                  
+                  <div className="flex items-center justify-center gap-3 w-1/2 mx-auto my-2">
+                    <div className="h-px bg-[#3D2B1F]/30 flex-1"></div>
+                    <p className="serif text-[10px] uppercase tracking-[0.2em] font-medium text-[#8B7355]">Together With</p>
+                    <div className="h-px bg-[#3D2B1F]/30 flex-1"></div>
+                  </div>
+                  
+                  <p className="text-[11px] sm:text-[12px] uppercase tracking-[0.15em] font-medium text-[#2C2C2C] mb-6 text-center">
+                    MR. & MRS. KUMARA PERERA
+                  </p>
+                </div>
+
+                <h1 className="script text-6xl sm:text-[5rem] text-[#2C2C2C] mb-6 sm:mb-8 drop-shadow-sm font-normal leading-tight">
+                  Shaneka <br/><span className="text-4xl">&amp;</span> Ranuka
                 </h1>
 
-                <div className="flex flex-col items-center w-full mb-8 sm:mb-10">
-                  <p className="text-[13px] sm:text-[15px] uppercase tracking-widest text-[#2C2C2C] font-bold mb-2">SEPTEMBER</p>
+                <div className="flex flex-col items-center w-full mb-6 sm:mb-8">
+                  <p className="text-[13px] sm:text-[15px] uppercase tracking-widest text-[#2C2C2C] font-bold mb-2">OCTOBER</p>
                   <div className="flex items-center justify-center w-full gap-4">
                     <div className="flex-1 text-right border-y border-[#2C2C2C]/30 py-2">
-                      <p className="text-[12px] sm:text-sm uppercase tracking-widest text-[#2C2C2C] font-bold">THURSDAY</p>
+                      <p className="text-[12px] sm:text-sm uppercase tracking-widest text-[#2C2C2C] font-bold">SATURDAY</p>
                     </div>
-                    <p className="serif text-7xl sm:text-[4.5rem] font-medium text-[#2C2C2C] leading-none px-1">24</p>
+                    <p className="serif text-7xl sm:text-[4.5rem] font-medium text-[#2C2C2C] leading-none px-1">17</p>
                     <div className="flex-1 text-left border-y border-[#2C2C2C]/30 py-2">
-                      <p className="text-[12px] sm:text-sm uppercase tracking-widest text-[#2C2C2C] font-bold">AT 8:30 AM</p>
+                      <p className="text-[12px] sm:text-sm uppercase tracking-widest text-[#2C2C2C] font-bold">AT 5:00 PM</p>
                     </div>
                   </div>
                   <p className="text-[13px] sm:text-[15px] uppercase tracking-widest text-[#2C2C2C] font-bold mt-2">2026</p>
                 </div>
 
-                <a
-                  href="https://maps.app.goo.gl/RU45U8xe2TiZsmL98"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="space-y-2 mt-2 sm:mt-4 text-[#2C2C2C] hover:opacity-70 transition-opacity block"
-                >
-                  <p className="text-[12px] sm:text-sm uppercase tracking-widest font-bold flex items-center justify-center gap-1.5">
-                    <MapPin size={12} className="text-[#8B7355]" />
-                    HERITAGE GRAND
-                  </p>
-                  <p className="text-[11px] sm:text-[12px] uppercase tracking-[0.15em] font-medium">BADULLA</p>
-                  <p className="text-[11px] sm:text-[12px] uppercase tracking-[0.15em] font-medium px-4">NO. 205, KEPPETIPOLA ROAD, BADULLA</p>
-                </a>
 
-                <div className="mt-8 sm:mt-10">
-                  <p className="text-[12px] sm:text-sm uppercase tracking-[0.15em] font-bold text-[#2C2C2C]">RECEPTION TO FOLLOW</p>
-                </div>
 
                 <div className="mt-4 sm:mt-6 flex justify-center">
                   <svg className="w-10 h-10 text-[#2C2C2C]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
@@ -246,7 +274,7 @@ export default function StoryApp() {
           </div>
         </section>
 
-        {/* --- SCREEN 1.5: Parents --- */}
+        {/* --- SCREEN 1.5: Invitee Details --- */}
         <section className="snap-section relative z-10 overflow-hidden">
           <SectionBackground />
           <div className="absolute inset-0 overflow-y-auto no-scrollbar flex flex-col items-center p-6 text-center">
@@ -255,31 +283,40 @@ export default function StoryApp() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1 }}
-                className="bg-white p-10 pt-16 rounded-t-[10rem] rounded-b-[2rem] border border-[#EAE1D3] w-full max-w-sm flex flex-col items-center shadow-xl relative overflow-hidden"
+                className="bg-white p-8 md:p-10 pt-12 md:pt-16 rounded-t-[10rem] rounded-b-[2rem] border border-[#EAE1D3] w-full max-w-sm flex flex-col items-center shadow-xl relative overflow-hidden"
               >
-                {/* Subtle texture overlay on the card */}
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dust.png')] opacity-30 pointer-events-none mix-blend-overlay" />
 
                 <div className="relative z-10 w-full flex flex-col items-center text-center">
-                  <h2 className="script text-6xl text-[#C8B29E] mb-3">Together with</h2>
-                  <h3 className="serif text-[13px] uppercase tracking-[0.3em] text-[#3D2B1F] mb-10 font-bold">Our Families</h3>
 
-                  <div className="flex flex-col items-center w-full mb-8">
-                    <p className="text-[11px] uppercase tracking-[0.2em] text-zinc-400 mb-3 font-bold">Bride's Parents</p>
-                    <p className="serif text-xl text-[#2C2C2C] leading-relaxed text-center">Mr. Upul Bandara Yapa<br/>&amp; Mrs. Kamani Priyanthi Yapa</p>
-                  </div>
+                  <p className="text-[11px] sm:text-[12px] uppercase tracking-[0.1em] font-bold text-[#8B7355] mb-6 text-center px-2 leading-relaxed">
+                    REQUEST THE PLEASURE OF {guestName ? "THE PRESENCE AND BLESSINGS OF" : "YOUR PRESENCE AND BLESSINGS"}
+                  </p>
+                  
+                  {guestName && (
+                    <div className="mb-6 w-full flex flex-col items-center">
+                      <p className="script text-4xl sm:text-5xl text-[#3D2B1F] drop-shadow-sm mb-4 text-center px-4 leading-tight">
+                        {guestPrefix ? `${guestPrefix} ${guestName}` : guestName}
+                      </p>
+                      <div className="h-px w-20 bg-[#3D2B1F]/30"></div>
+                    </div>
+                  )}
 
-                  {/* Elegant Divider */}
-                  <div className="flex items-center justify-center gap-3 w-3/4 mx-auto mb-8">
-                    <div className="h-px bg-[#EAE1D3] flex-1"></div>
-                    <div className="w-1.5 h-1.5 rotate-45 bg-[#C8B29E]"></div>
-                    <div className="h-px bg-[#EAE1D3] flex-1"></div>
-                  </div>
-
-                  <div className="flex flex-col items-center w-full">
-                    <p className="text-[11px] uppercase tracking-[0.2em] text-zinc-400 mb-3 font-bold">Groom's Parents</p>
-                    <p className="serif text-xl text-[#2C2C2C] leading-relaxed text-center">Mr. Sunil Delpearachchige<br/>&amp; Mrs. Manjula Delpearachchige</p>
-                  </div>
+                  <p className="text-[11px] sm:text-[12px] uppercase tracking-[0.1em] font-medium text-[#2C2C2C] mb-2 sm:mb-4 text-center px-4 leading-relaxed">
+                    ON THE OCCASION OF THE MARRIAGE OF THEIR BELOVED CHILDREN
+                  </p>
+                  
+                  <h2 className="script text-5xl sm:text-6xl text-[#3D2B1F] mt-4 mb-2">
+                    Shaneka <span className="text-3xl">&amp;</span> Ranuka
+                  </h2>
+                  
+                  {tableNumber && (
+                    <div className="mt-8 bg-[#FAF7F2] border border-[#EAE1D3] py-3 px-6 rounded-full inline-block shadow-sm">
+                      <p className="text-[12px] uppercase tracking-[0.2em] font-bold text-[#3D2B1F]">
+                        <span className="text-[#8B7355] mr-2">Table No.</span> {tableNumber}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             </div>
@@ -364,11 +401,11 @@ export default function StoryApp() {
               className="flex-1 w-full flex flex-col items-center justify-start text-center pt-2 pb-12 z-20 bg-white"
             >
               <h2 className="serif text-6xl md:text-7xl text-[#2C2C2C] font-normal leading-none mt-4">
-                SHAKILA
+                SHANEKA
               </h2>
               <span className="script text-5xl md:text-6xl text-[#2C2C2C] my-1 opacity-80">and</span>
               <h2 className="serif text-6xl md:text-7xl text-[#2C2C2C] font-normal leading-none">
-                MADAWA
+                RANUKA
               </h2>
             </motion.div>
           </div>
@@ -401,11 +438,8 @@ export default function StoryApp() {
                   <div className="absolute left-1/2 top-0 bottom-0 w-px bg-zinc-300 -translate-x-1/2" />
 
                   {[
-                    { time: "8:30 AM", title: "GUEST ARRIVAL" },
-                    { time: "9:50 AM", title: "PORUWA CEREMONY" },
-                    { time: "12:30 PM", title: "WEDDING RECEPTION" },
-                    { time: "1:30 PM", title: "LUNCH BUFFET" },
-                    { time: "4:30 PM", title: "GOING AWAY" },
+                    { time: "5:00 PM", title: "HOLY MATRIMONY" },
+                    { time: "7:00 PM", title: "RECEPTION" },
                   ].map((item, idx) => (
                     <div key={idx} className="relative z-10 bg-white/70 backdrop-blur-sm p-4 rounded-xl border border-white shadow-sm w-[85%] mx-auto">
                       <p className="text-[13px] font-bold text-[#8B7355] mb-1">{item.time}</p>
@@ -434,19 +468,34 @@ export default function StoryApp() {
                   <h3 className="script text-4xl text-[#8B7355] mb-1">the</h3>
                   <h2 className="serif text-4xl tracking-[0.2em] text-[#3D2B1F] font-medium uppercase mb-6">Details</h2>
 
-                  <div className="w-full h-32 rounded-xl overflow-hidden mb-4 relative">
-                    <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/cd/08/b1/caption.jpg?w=900&h=500&s=1" className="w-full h-full object-cover" alt="Venue" />
+
+                  <div className="bg-[#EAE1D3] py-2 rounded-t-xl mb-1">
+                    <p className="text-[12px] uppercase tracking-[0.2em] font-bold text-[#8B7355]">Holy Matrimony</p>
+                  </div>
+                  <div className="bg-white py-4 rounded-b-xl shadow-sm border border-white mb-6 flex flex-col items-center">
+                    <p className="text-[12px] uppercase font-bold text-[#3D2B1F]">St. Mary's Church</p>
+                    <p className="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">Grand Street, Negombo</p>
+                    <p className="text-[10px] uppercase tracking-widest text-zinc-500 mb-3 px-2 text-center">At 5.00 PM</p>
+                    <a
+                      href="https://maps.app.goo.gl/6eoCHQhqxJZJW5fS9"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#EAE1D3] text-[#3D2B1F] rounded-full text-[10px] uppercase tracking-widest font-bold hover:bg-[#C8B29E] transition-colors"
+                    >
+                      <MapPin size={10} />
+                      Live Location
+                    </a>
                   </div>
 
                   <div className="bg-[#EAE1D3] py-2 rounded-t-xl mb-1">
-                    <p className="text-[12px] uppercase tracking-[0.2em] font-bold text-[#8B7355]">Location</p>
+                    <p className="text-[12px] uppercase tracking-[0.2em] font-bold text-[#8B7355]">Reception</p>
                   </div>
-                  <div className="bg-white py-4 rounded-b-xl shadow-sm border border-white mb-4 flex flex-col items-center">
-                    <p className="text-[12px] uppercase font-bold text-[#3D2B1F]">Heritage Grand</p>
-                    <p className="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">Badulla</p>
-                    <p className="text-[10px] uppercase tracking-widest text-zinc-500 mb-3 px-2 text-center">No. 205, Keppetipola Road, Badulla</p>
+                  <div className="bg-white py-4 rounded-b-xl shadow-sm border border-white mb-2 flex flex-col items-center">
+                    <p className="text-[12px] uppercase font-bold text-[#3D2B1F]">Centrium Ballroom</p>
+                    <p className="text-[10px] uppercase tracking-widest text-zinc-500 mt-1">Avenra Gardens, Negombo</p>
+                    <p className="text-[10px] uppercase tracking-widest text-zinc-500 mb-3 px-2 text-center">From 7.00 PM Onwards</p>
                     <a
-                      href="https://maps.app.goo.gl/XrNGSDx3cGwqkxE49"
+                      href="https://maps.app.goo.gl/hCRAduBwHhJeMNE16"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#EAE1D3] text-[#3D2B1F] rounded-full text-[10px] uppercase tracking-widest font-bold hover:bg-[#C8B29E] transition-colors"
@@ -483,11 +532,17 @@ export default function StoryApp() {
                 </div>
 
                 <p className="serif text-[13px] sm:text-[15px] uppercase tracking-[0.15em] font-bold text-[#2C2C2C] mb-6">
-                  BY SEPTEMBER 10, 2026
+                  BY 30TH SEPTEMBER 2026
                 </p>
 
                 <div className="w-full">
                   <RSVPForm />
+                </div>
+
+                <div className="mt-8 flex flex-col items-center gap-2 border-t border-zinc-200 pt-6 w-full">
+                  <p className="text-[11px] uppercase tracking-[0.15em] font-bold text-[#2C2C2C] mb-2">FOR INQUIRIES</p>
+                  <p className="text-[12px] font-medium text-[#3D2B1F]">KUMARI: <a href="tel:0762701966" className="text-[#8B7355]">076-2701966</a></p>
+                  <p className="text-[12px] font-medium text-[#3D2B1F]">SHANI: <a href="tel:0776490372" className="text-[#8B7355]">077-6490372</a></p>
                 </div>
               </motion.div>
             </div>
