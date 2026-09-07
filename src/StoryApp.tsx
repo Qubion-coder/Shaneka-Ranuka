@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MapPin, Clock, Volume2, VolumeX } from 'lucide-react';
+import { MapPin, Clock, Volume2, VolumeX, ChevronDown } from 'lucide-react';
 import RSVPForm from './RSVPForm'; // We'll extract RSVPForm
 import WishesForm from './WishesForm';
 
@@ -226,7 +226,7 @@ export default function StoryApp() {
                   </p>
                   
                   <p className="text-[11px] sm:text-[12px] uppercase tracking-[0.15em] font-medium text-[#2C2C2C] mb-2">
-                    MR. & MRS. TRAVIN LODEWYKE
+                    MR. &amp; MRS. TRAVIN LODEWYKE
                   </p>
                   
                   <div className="flex items-center justify-center gap-3 w-1/2 mx-auto my-2">
@@ -236,39 +236,51 @@ export default function StoryApp() {
                   </div>
                   
                   <p className="text-[11px] sm:text-[12px] uppercase tracking-[0.15em] font-medium text-[#2C2C2C] mb-6 text-center">
-                    MR. & MRS. KUMARA PERERA
+                    MR. &amp; MRS. KUMARA PERERA
                   </p>
                 </div>
 
-                <h1 className="script text-6xl sm:text-[5rem] text-[#2C2C2C] mb-6 sm:mb-8 drop-shadow-sm font-normal leading-tight">
-                  Shaneka <br/><span className="text-4xl">&amp;</span> Ranuka
-                </h1>
+                <div className="relative z-10 w-full flex flex-col items-center text-center">
+                  <p className="text-[11px] sm:text-[12px] uppercase tracking-[0.1em] font-bold text-[#8B7355] mb-6 text-center px-2 leading-relaxed">
+                    REQUEST THE PLEASURE OF {guestName ? "THE PRESENCE AND BLESSINGS OF" : "YOUR PRESENCE AND BLESSINGS"}
+                  </p>
+                  
+                  {guestName && (
+                    <div className="mb-6 w-full flex flex-col items-center">
+                      <p className="script text-4xl sm:text-5xl text-[#3D2B1F] drop-shadow-sm mb-4 text-center px-4 leading-tight">
+                        {guestPrefix ? `${guestPrefix} ${guestName}` : guestName}
+                      </p>
+                      <div className="h-px w-20 bg-[#3D2B1F]/30"></div>
+                    </div>
+                  )}
 
-                <div className="flex flex-col items-center w-full mb-6 sm:mb-8">
-                  <p className="text-[13px] sm:text-[15px] uppercase tracking-widest text-[#2C2C2C] font-bold mb-2">OCTOBER</p>
-                  <div className="flex items-center justify-center w-full gap-4">
-                    <div className="flex-1 text-right border-y border-[#2C2C2C]/30 py-2">
-                      <p className="text-[12px] sm:text-sm uppercase tracking-widest text-[#2C2C2C] font-bold">SATURDAY</p>
+                  <p className="text-[11px] sm:text-[12px] uppercase tracking-[0.1em] font-medium text-[#2C2C2C] mb-2 sm:mb-4 text-center px-4 leading-relaxed">
+                    ON THE OCCASION OF THE MARRIAGE OF THEIR BELOVED CHILDREN
+                  </p>
+                  
+                  <h1 className="script text-5xl sm:text-6xl text-[#3D2B1F] mt-4 mb-2 drop-shadow-sm font-normal leading-tight">
+                    Shaneka <br/><span className="text-4xl">&amp;</span> Ranuka
+                  </h1>
+                  
+                  {tableNumber && (
+                    <div className="mt-8 bg-[#FAF7F2] border border-[#EAE1D3] py-3 px-6 rounded-full inline-block shadow-sm">
+                      <p className="text-[12px] uppercase tracking-[0.2em] font-bold text-[#3D2B1F]">
+                        <span className="text-[#8B7355] mr-2">Table No.</span> {tableNumber}
+                      </p>
                     </div>
-                    <p className="serif text-7xl sm:text-[4.5rem] font-medium text-[#2C2C2C] leading-none px-1">17</p>
-                    <div className="flex-1 text-left border-y border-[#2C2C2C]/30 py-2">
-                      <p className="text-[12px] sm:text-sm uppercase tracking-widest text-[#2C2C2C] font-bold">AT 5:00 PM</p>
-                    </div>
-                  </div>
-                  <p className="text-[13px] sm:text-[15px] uppercase tracking-widest text-[#2C2C2C] font-bold mt-2">2026</p>
+                  )}
                 </div>
 
 
 
-                <div className="mt-4 sm:mt-6 flex justify-center">
-                  <svg className="w-10 h-10 text-[#2C2C2C]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M15 12c-1.5-1-2-2-2-4v-4l6-2v6c0 2-.5 3-2 4M9 12c1.5-1 2-2 2-4v-4l-6-2v6c0 2 .5 3 2 4M13 12v8M11 12v8M9 20h6" />
-                    <circle cx="15.5" cy="5.5" r="0.5" fill="currentColor" />
-                    <circle cx="14" cy="7.5" r="0.5" fill="currentColor" />
-                    <circle cx="8.5" cy="5.5" r="0.5" fill="currentColor" />
-                    <circle cx="10" cy="7.5" r="0.5" fill="currentColor" />
-                  </svg>
-                </div>
+                <motion.div 
+                  className="mt-8 flex flex-col items-center justify-center text-[#8B7355]"
+                  animate={{ y: [0, 8, 0] }}
+                  transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                >
+                  <span className="text-[10px] uppercase tracking-[0.2em] font-bold mb-1">Scroll Down</span>
+                  <ChevronDown size={24} strokeWidth={1.5} />
+                </motion.div>
               </motion.div>
             </div>
           </div>
@@ -288,35 +300,23 @@ export default function StoryApp() {
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dust.png')] opacity-30 pointer-events-none mix-blend-overlay" />
 
                 <div className="relative z-10 w-full flex flex-col items-center text-center">
-
-                  <p className="text-[11px] sm:text-[12px] uppercase tracking-[0.1em] font-bold text-[#8B7355] mb-6 text-center px-2 leading-relaxed">
-                    REQUEST THE PLEASURE OF {guestName ? "THE PRESENCE AND BLESSINGS OF" : "YOUR PRESENCE AND BLESSINGS"}
-                  </p>
-                  
-                  {guestName && (
-                    <div className="mb-6 w-full flex flex-col items-center">
-                      <p className="script text-4xl sm:text-5xl text-[#3D2B1F] drop-shadow-sm mb-4 text-center px-4 leading-tight">
-                        {guestPrefix ? `${guestPrefix} ${guestName}` : guestName}
-                      </p>
-                      <div className="h-px w-20 bg-[#3D2B1F]/30"></div>
-                    </div>
-                  )}
-
-                  <p className="text-[11px] sm:text-[12px] uppercase tracking-[0.1em] font-medium text-[#2C2C2C] mb-2 sm:mb-4 text-center px-4 leading-relaxed">
-                    ON THE OCCASION OF THE MARRIAGE OF THEIR BELOVED CHILDREN
-                  </p>
-                  
-                  <h2 className="script text-5xl sm:text-6xl text-[#3D2B1F] mt-4 mb-2">
-                    Shaneka <span className="text-3xl">&amp;</span> Ranuka
+                  <h2 className="script text-5xl sm:text-6xl text-[#3D2B1F] mb-6 sm:mb-8">
+                    Shaneka <br/><span className="text-4xl">&amp;</span> Ranuka
                   </h2>
-                  
-                  {tableNumber && (
-                    <div className="mt-8 bg-[#FAF7F2] border border-[#EAE1D3] py-3 px-6 rounded-full inline-block shadow-sm">
-                      <p className="text-[12px] uppercase tracking-[0.2em] font-bold text-[#3D2B1F]">
-                        <span className="text-[#8B7355] mr-2">Table No.</span> {tableNumber}
-                      </p>
+
+                  <div className="flex flex-col items-center w-full mb-6 sm:mb-8">
+                    <p className="text-[13px] sm:text-[15px] uppercase tracking-widest text-[#2C2C2C] font-bold mb-2">OCTOBER</p>
+                    <div className="flex items-center justify-center w-full gap-4">
+                      <div className="flex-1 text-right border-y border-[#2C2C2C]/30 py-2">
+                        <p className="text-[12px] sm:text-sm uppercase tracking-widest text-[#2C2C2C] font-bold">SATURDAY</p>
+                      </div>
+                      <p className="serif text-7xl sm:text-[4.5rem] font-medium text-[#2C2C2C] leading-none px-1">17</p>
+                      <div className="flex-1 text-left border-y border-[#2C2C2C]/30 py-2">
+                        <p className="text-[12px] sm:text-sm uppercase tracking-widest text-[#2C2C2C] font-bold">AT 5:00 PM</p>
+                      </div>
                     </div>
-                  )}
+                    <p className="text-[13px] sm:text-[15px] uppercase tracking-widest text-[#2C2C2C] font-bold mt-2">2026</p>
+                  </div>
                 </div>
               </motion.div>
             </div>
@@ -376,40 +376,7 @@ export default function StoryApp() {
           </div>
         </section>
 
-        {/* --- SCREEN 2: Couple Screen --- */}
-        <section className="snap-section relative z-10 overflow-hidden bg-white rounded-t-[2.5rem]">
-          <div className="absolute inset-0 overflow-y-auto no-scrollbar flex flex-col items-center justify-start text-center">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 1 }}
-              className="w-full h-[65dvh] shrink-0 relative"
-            >
-              <img
-                src="/4.jpg.jpeg"
-                alt="Couple"
-                className="w-full h-full object-cover object-top"
-              />
-              {/* Soft white gradient at the bottom to blend into the text section */}
-              <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none" />
-            </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.2 }}
-              className="flex-1 w-full flex flex-col items-center justify-start text-center pt-2 pb-12 z-20 bg-white"
-            >
-              <h2 className="serif text-6xl md:text-7xl text-[#2C2C2C] font-normal leading-none mt-4">
-                SHANEKA
-              </h2>
-              <span className="script text-5xl md:text-6xl text-[#2C2C2C] my-1 opacity-80">and</span>
-              <h2 className="serif text-6xl md:text-7xl text-[#2C2C2C] font-normal leading-none">
-                RANUKA
-              </h2>
-            </motion.div>
-          </div>
-        </section>
 
 
 
@@ -586,6 +553,21 @@ export default function StoryApp() {
             </div>
           </div>
         </section>
+
+      {/* --- SCREEN 8: Couple Closing --- */}
+      <section className="snap-section relative z-10 overflow-hidden bg-white rounded-t-[2.5rem]">
+        <div className="absolute inset-0 overflow-y-auto no-scrollbar flex flex-col items-center justify-start text-center">
+          <div className="w-full h-[65dvh] shrink-0 relative" style={{ opacity: 1 }}>
+            <img alt="Couple" className="w-full h-full object-cover object-top" src="/4.jpg.jpeg" />
+            <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none"></div>
+          </div>
+          <div className="flex-1 w-full flex flex-col items-center justify-start text-center pt-2 pb-12 z-20 bg-white" style={{ opacity: 1, transform: 'none' }}>
+            <h2 className="serif text-6xl md:text-7xl text-[#2C2C2C] font-normal leading-none mt-4">SHANEKA</h2>
+            <span className="script text-5xl md:text-6xl text-[#2C2C2C] my-1 opacity-80">and</span>
+            <h2 className="serif text-6xl md:text-7xl text-[#2C2C2C] font-normal leading-none">RANUKA</h2>
+          </div>
+        </div>
+      </section>
 
       </div>
 
