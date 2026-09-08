@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 export default function RSVPForm() {
-  const endpoint = "https://script.google.com/macros/s/AKfycbxrf5dhO6EWCnIEzScJGh4RZyT_2CqmwwSQG8gCbWEm_pwGwteLni08YU_uY350CNHx/exec";
+  const endpoint = "https://script.google.com/macros/s/AKfycbwnSeD6iKs3e0wWwRZUfTE1YZ4Nw-Cif8pRjId0VvNEFCCFZa8CvUglFrVnfU3GBt2w/exec";
 
   const [attendance, setAttendance] = useState<"yes" | "no">("yes");
   const [name, setName] = useState<string>("");
